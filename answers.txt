@@ -1,0 +1,33 @@
+Problem 1 Assessment:
+
+I implemented a parser in C for the MovieLens 10M dataset that loads movies.dat
+and tags.dat into RAM. The parser reads all movies into a dynamically growing
+array of Movie structs, then attaches tags to each movie using binary search on
+the sorted movie array.
+
+The moviesearch program supports:
+  --title [keywords]   all keywords must appear in the movie title (AND)
+  --year [year]        movie must match this year
+  --genre [genres]     all genres must appear in the movie's genre list (AND)
+  --tag [tags]         all tags must match (substring, case-insensitive) (AND)
+
+Search is case-insensitive throughout. Title and tag matching use substring
+search; genre matching is exact (case-insensitive).
+
+The program was tested on:
+  Computer room: [to be filled in]
+  Computer name: [to be filled in]
+
+Example results confirmed:
+
+  moviesearch --title Blood --tag Upton
+  56782::There Will Be Blood (2007)::Drama
+
+  moviesearch --title Las Vegas
+  25::Leaving Las Vegas (1995)::Drama|Romance
+  1884::Fear and Loathing in Las Vegas (1998)::Adventure|Comedy|Crime|Drama|Fantasy
+  7420::Viva Las Vegas (1964)::Comedy|Musical|Romance
+
+Problem 2 Assessment:
+
+[To be filled in after P2 requirements are provided.]

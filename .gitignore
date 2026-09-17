@@ -1,0 +1,14 @@
+# MovieLens dataset - do not commit
+*.dat
+ml-10m/
+ml-10m.zip
+
+# Compiled output
+*.exe
+*.o
+P1/code/moviesearch
+
+# IDE / OS
+.vscode/
+.kilo/
+*.DS_Store
