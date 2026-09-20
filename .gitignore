@@ -3,10 +3,13 @@
 ml-10m/
 ml-10m.zip
 
-# Compiled output
+# Compiled output / binaries
 *.exe
 *.o
-P1/code/moviesearch
+*.out
+moviesearch
+RatingDistance
+MovieRate
 
 # IDE / OS
 .vscode/

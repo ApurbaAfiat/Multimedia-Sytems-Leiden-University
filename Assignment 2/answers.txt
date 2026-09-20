@@ -1,0 +1,89 @@
+Student: Apurba Afiat
+Computer room: [to be filled in]
+Computer name: [to be filled in]
+
+================================================================================
+Problem 1 — moviesearch with Average Rating
+================================================================================
+
+I extended the Assignment 1 moviesearch program to also display the average
+user rating for each matched movie.
+
+Implementation:
+  - parser.c now loads ratings.dat into a flat RatingDB (array of Rating structs).
+    Each Rating stores: user_id, movie_id, rating (float).
+  - After printing a movie's ID, title, and genres, moviesearch scans the
+    RatingDB to compute the mean rating for that movieID and appends it as
+    [X.XX] to the output line.
+  - If ratings.dat is not present, a warning is printed and movies are shown
+    without ratings (backward-compatible).
+
+Output format:
+  movieID::title (year)::genre1|genre2|... [avg_rating]
+
+Example:
+  ./moviesearch --title "Las Vegas"
+  25::Leaving Las Vegas (1995)::Drama|Romance [3.25]
+  1884::Fear and Loathing in Las Vegas (1998)::Adventure|Comedy|Crime|Drama|Fantasy [3.47]
+  7420::Viva Las Vegas (1964)::Comedy|Musical|Romance [3.55]
+
+Screenshot: see P1/screenshots/
+
+================================================================================
+Problem 2 — RatingDistance
+================================================================================
+
+RatingDistance computes the average absolute difference in ratings between two
+users, considering only movies that BOTH users have rated (shared movies).
+
+Implementation:
+  - All ratings are loaded into a flat array from ratings.dat.
+  - User1's ratings are extracted into a sorted (movie_id, rating) array to
+    enable O(log n) binary search.
+  - User2's ratings are scanned linearly; for each movie, binary search checks
+    if User1 also rated it. If so, |r1 - r2| is accumulated.
+  - RatingDistance = sum(|r1 - r2|) / count(shared movies).
+
+Algorithm note (sparsity):
+  If the two users share no commonly rated movies, the RatingDistance is
+  reported as 0.00 with an explanatory note.
+
+Example:
+  ./RatingDistance 453 10425
+  The RatingDistance is X.XX
+
+Screenshot: see P2/screenshots/
+
+================================================================================
+Problem 3 — MovieRate (MDC Collaborative Filtering)
+================================================================================
+
+MovieRate predicts the rating a user would give an unseen movie using the
+Most-Similar-User approach (minimum RatingDistance collaborative filtering).
+
+Algorithm:
+  1. Load all ~10M ratings from ratings.dat into a flat array.
+  2. Build a sorted (movie_id, rating) profile for the query user.
+  3. For every OTHER user who has rated the target movie:
+       a. Build a sorted profile for that candidate user.
+       b. Use a merge-like O(|P1| + |P2|) scan to compute their RatingDistance.
+       c. Skip candidates with 0 shared movies (distance undefined).
+  4. The candidate with the smallest RatingDistance is the "most similar user".
+     Tie-break: if two candidates have equal distance, pick the lower user ID.
+  5. The predicted rating = that candidate's rating for the target movie.
+
+Output:
+  The predicted rating for UserID: [U] and MovieID: [M] is [Rating]
+  based on the most similar user: [SimUserID] with a ratingdistance: [Distance]
+
+Sparsity handling:
+  - If the query user has no ratings: cannot compute any distance → error.
+  - If no other user rated the movie: prediction impossible → error.
+  - If candidates exist but none share movies with the query user → error.
+
+Example:
+  ./MovieRate 13 32
+  The predicted rating for UserID: 13 and MovieID: 32 is X based on the most
+  similar user: YYYY with a ratingdistance: Z.ZZ
+
+Screenshot: see P3/screenshots/
