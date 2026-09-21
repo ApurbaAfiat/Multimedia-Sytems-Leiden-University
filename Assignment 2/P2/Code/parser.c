@@ -75,10 +75,40 @@ static Movie *find_movie(MovieDB *db, int movie_id) {
     return NULL;
 }
 
+/* ── file loading helper with fallback paths ────────────────────────── */
+
+static FILE *open_file_with_fallbacks(const char *path) {
+    FILE *f = fopen(path, "r");
+    if (f) return f;
+
+    /* Fallback 1: parent directory (e.g. if run from P1/Code and dat is in Assignment 2) */
+    char buf[512];
+    snprintf(buf, sizeof(buf), "../%s", path);
+    f = fopen(buf, "r");
+    if (f) return f;
+
+    /* Fallback 2: two levels up */
+    snprintf(buf, sizeof(buf), "../../%s", path);
+    f = fopen(buf, "r");
+    if (f) return f;
+
+    /* Fallback 3: inside ml-10m subfolder */
+    snprintf(buf, sizeof(buf), "ml-10m/%s", path);
+    f = fopen(buf, "r");
+    if (f) return f;
+
+    snprintf(buf, sizeof(buf), "../ml-10m/%s", path);
+    f = fopen(buf, "r");
+    if (f) return f;
+
+    snprintf(buf, sizeof(buf), "../../ml-10m/%s", path);
+    return fopen(buf, "r");
+}
+
 /* ── movies ──────────────────────────────────────────────────────────── */
 
 static int load_movies(MovieDB *db, const char *path) {
-    FILE *f = fopen(path, "r");
+    FILE *f = open_file_with_fallbacks(path);
     if (!f) { fprintf(stderr, "Cannot open %s\n", path); return 0; }
 
     int capacity = 2048;
@@ -125,7 +155,7 @@ static int load_movies(MovieDB *db, const char *path) {
 }
 
 static int load_tags(MovieDB *db, const char *path) {
-    FILE *f = fopen(path, "r");
+    FILE *f = open_file_with_fallbacks(path);
     if (!f) { fprintf(stderr, "Cannot open %s\n", path); return 0; }
 
     char line[MAX_LINE];
@@ -188,7 +218,7 @@ void free_database(MovieDB *db) {
 /* ── ratings ─────────────────────────────────────────────────────────── */
 
 RatingDB *load_ratings(const char *path) {
-    FILE *f = fopen(path, "r");
+    FILE *f = open_file_with_fallbacks(path);
     if (!f) { fprintf(stderr, "Cannot open %s\n", path); return NULL; }
 
     int capacity = 1 << 20;   /* start at 1 M entries */
