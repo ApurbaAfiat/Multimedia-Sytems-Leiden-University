@@ -81,28 +81,29 @@ static FILE *open_file_with_fallbacks(const char *path) {
     FILE *f = fopen(path, "r");
     if (f) return f;
 
-    /* Fallback 1: parent directory (e.g. if run from P1/Code and dat is in Assignment 2) */
+    /* Common extracted MovieLens folder variations */
+    const char *prefixes[] = {
+        "../",
+        "../../",
+        "ml-10m/",
+        "../ml-10m/",
+        "../../ml-10m/",
+        "ml-10M100K/",
+        "../ml-10M100K/",
+        "../../ml-10M100K/",
+        "ml10m/",
+        "../ml10m/",
+        "../../ml10m/"
+    };
+    int n_prefixes = sizeof(prefixes) / sizeof(prefixes[0]);
+
     char buf[512];
-    snprintf(buf, sizeof(buf), "../%s", path);
-    f = fopen(buf, "r");
-    if (f) return f;
-
-    /* Fallback 2: two levels up */
-    snprintf(buf, sizeof(buf), "../../%s", path);
-    f = fopen(buf, "r");
-    if (f) return f;
-
-    /* Fallback 3: inside ml-10m subfolder */
-    snprintf(buf, sizeof(buf), "ml-10m/%s", path);
-    f = fopen(buf, "r");
-    if (f) return f;
-
-    snprintf(buf, sizeof(buf), "../ml-10m/%s", path);
-    f = fopen(buf, "r");
-    if (f) return f;
-
-    snprintf(buf, sizeof(buf), "../../ml-10m/%s", path);
-    return fopen(buf, "r");
+    for (int i = 0; i < n_prefixes; i++) {
+        snprintf(buf, sizeof(buf), "%s%s", prefixes[i], path);
+        f = fopen(buf, "r");
+        if (f) return f;
+    }
+    return NULL;
 }
 
 /* ── movies ──────────────────────────────────────────────────────────── */
