@@ -1,0 +1,22 @@
+Student-facing files
+====================
+assignment.pdf
+README.md
+starter.cpp
+prepare_dataset.py
+download_weights.sh
+dataset/selected_images.txt
+dataset/images/README.txt
+dataset/images/<15 JPEG files>
+dataset/ground_truth/README.txt
+dataset/ground_truth/<15 TXT files>
+
+Generated after downloading the model weights
+=============================================
+weights/yolov3.weights
+weights/yolov7.weights
+
+Generated after running the experiments
+=======================================
+output/yolov3/<annotated JPEG files>
+output/yolov7/<annotated JPEG files>

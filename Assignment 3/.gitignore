@@ -1,0 +1,21 @@
+# Model weights (very large binary files - download separately)
+weights/
+
+# Compiled binary
+detector
+detector.exe
+
+# Annotated output images
+output/
+
+# Build artifacts
+*.o
+*.a
+*.so
+
+# VS Code
+.vscode/
+
+# Python cache
+__pycache__/
+*.pyc
